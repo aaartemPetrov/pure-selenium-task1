@@ -20,7 +20,7 @@ public class SearchedResultPage {
     }
 
     public List<WebElement> getSearchedItems() {
-        return searchedItems;
+        return this.searchedItems;
     }
 
     public void setSearchedItems(List<WebElement> searchedItems) {

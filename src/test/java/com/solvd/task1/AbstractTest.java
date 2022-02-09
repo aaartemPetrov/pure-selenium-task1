@@ -14,9 +14,9 @@ import org.testng.asserts.SoftAssert;
 import java.util.List;
 import java.util.Locale;
 
-public class EbayTest {
+public class AbstractTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EbayTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
     private WebDriver driver;
 
     @BeforeMethod
@@ -28,8 +28,8 @@ public class EbayTest {
     @Test
     public void checkSearchTest() {
         HomePage homePage = new HomePage(this.driver);
-        homePage.writeInSearchLine("samsung");
-        homePage.clickSearchButton();
+        AbstractPage.sendKeys(driver, homePage.getSearchInput(), "sony");
+        AbstractPage.buttonClick(driver, homePage.getSearchButton());
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
         List<WebElement> searchedItems = searchedResultPage.getSearchedItems();
@@ -37,7 +37,7 @@ public class EbayTest {
 
         SoftAssert softAssert = new SoftAssert();
         searchedItems.forEach(searchedItem -> {
-            softAssert.assertTrue(searchedItem.getText().toLowerCase(Locale.ROOT).contains("samsung"));
+            softAssert.assertTrue(searchedItem.getText().toLowerCase(Locale.ROOT).contains("sony"));
             LOGGER.info(searchedItem.getText());
         });
         softAssert.assertAll();
