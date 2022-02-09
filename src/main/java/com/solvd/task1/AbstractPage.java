@@ -1,6 +1,5 @@
 package com.solvd.task1;
 
-import org.apache.commons.exec.TimeoutObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
