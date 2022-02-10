@@ -1,4 +1,4 @@
-package com.solvd.task1;
+package com.solvd.task1.page;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,6 +16,8 @@ public class HomePage {
     private WebElement searchInput;
     @FindBy(css = "#gh-f input[type=submit]")
     private WebElement searchButton;
+    @FindBy(css = "#gh-eb-u a[href*=sign]")
+    private WebElement signInLink;
 
     public HomePage(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -25,16 +27,18 @@ public class HomePage {
 
     public void writeInSearchLine(String string) {
         this.searchInput.sendKeys(string);
-        /*LOGGER.info("\"" + string + "\n was wrote in to a search line");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.ByCssSelector.cssSelector("#gAC")));*/
     }
 
     public void clickSearchButton() {
         this.searchButton.click();
-        /*LOGGER.info("Search button was clicked.");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.ByCssSelector.cssSelector("#gh-f")));*/
+    }
+
+    public WebElement getSignInLink() {
+        return this.signInLink;
+    }
+
+    public void setSignInLink(WebElement signInLink) {
+        this.signInLink = signInLink;
     }
 
     public WebElement getSearchInput() {

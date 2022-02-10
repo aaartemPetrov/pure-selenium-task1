@@ -14,11 +14,18 @@
         <slf4jVersion>1.7.35</slf4jVersion>
         <testNgVersion>7.5</testNgVersion>
         <logbackVersion>1.2.10</logbackVersion>
+        <apacheStringUtilsVersion>3.12.0</apacheStringUtilsVersion>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apacheStringUtilsVersion}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

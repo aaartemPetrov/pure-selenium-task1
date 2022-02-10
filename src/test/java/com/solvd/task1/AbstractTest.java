@@ -1,16 +1,18 @@
 package com.solvd.task1;
 
+import com.solvd.task1.page.*;
+import com.solvd.task1.page.components.*;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,21 +28,153 @@ public class AbstractTest {
     }
 
     @Test
-    public void checkSearchTest() {
+    public void checkSearchTooltipTest() {
         HomePage homePage = new HomePage(this.driver);
-        AbstractPage.sendKeys(driver, homePage.getSearchInput(), "sony");
-        AbstractPage.buttonClick(driver, homePage.getSearchButton());
+        AbstractPage.sendKeys(driver, homePage.getSearchInput(), "a");
+
+        SearchTooltip searchTooltip = new SearchTooltip(this.driver);
+        WebElement tooltip = searchTooltip.getSearchTooltip();
+        Assert.assertNotNull(tooltip, "Tooltip is null.");
+        Assert.assertFalse(searchTooltip.getTooltips().isEmpty(), "Tooltip popup is empty");
+    }
+
+    @DataProvider(name = "brandNamesForSearch")
+    public Object[][] names() {
+            return new Object[][] {{"Sony"}, {"Samsung"}, {"Apple"}, {"Xiaomi"}, {"Huawei"}};
+    }
+
+    @Test(dataProvider = "brandNamesForSearch")
+    public void checkSearchTest(String brandName) {
+        HomePage homePage = new HomePage(this.driver);
+        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), brandName);
+        AbstractPage.click(this.driver, homePage.getSearchButton());
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
-        List<WebElement> searchedItems = searchedResultPage.getSearchedItems();
+        List<WebElement> searchedItems = searchedResultPage.getSearchedItemsTitles();
         Assert.assertFalse(searchedItems.isEmpty(), "There are no searched items in list.");
 
         SoftAssert softAssert = new SoftAssert();
         searchedItems.forEach(searchedItem -> {
-            softAssert.assertTrue(searchedItem.getText().toLowerCase(Locale.ROOT).contains("sony"));
+            softAssert.assertTrue(searchedItem.getText().toLowerCase(Locale.ROOT).contains(brandName.toLowerCase(Locale.ROOT)),
+                    String.format("Product title does not contain brand name \"%s\"", brandName));
             LOGGER.info(searchedItem.getText());
         });
         softAssert.assertAll();
+    }
+
+    @Test
+    public void checkUnderPriceFilterTest() {
+        HomePage homePage = new HomePage(this.driver);
+        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), "samsung");
+        AbstractPage.click(this.driver, homePage.getSearchButton());
+
+        UnderPriceLink underPriceLink = new UnderPriceLink(this.driver);
+        AbstractPage.click(this.driver, underPriceLink.getLink());
+
+        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
+        List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
+        List<WebElement> searchedItemsPrices = searchedResultPage.getSearchedItemsPrices();
+        Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
+        Assert.assertFalse(searchedItemsPrices.isEmpty(), "There are no searched items prices in list.");
+
+        SoftAssert softAssertTitle = new SoftAssert();
+        searchedItemsTitles.forEach(searchedItemTitle -> {
+            softAssertTitle.assertTrue(searchedItemTitle.getText().toLowerCase(Locale.ROOT).contains("samsung"),
+                    String.format("Product title doesn't contain brand name \"%s\"", "samsung"));
+            LOGGER.info(searchedItemTitle.getText());
+        });
+        softAssertTitle.assertAll();
+
+        SoftAssert softAssertPrice = new SoftAssert();
+        searchedItemsPrices.forEach(searchedItemPrice -> {
+            String searchedItemPriceString = searchedItemPrice.getText();
+            searchedItemPriceString = StringUtils.replaceChars(searchedItemPriceString, ",", ".");
+            int actualPrice = Integer.parseInt(StringUtils.substringBetween(searchedItemPriceString, "$", "."));
+            softAssertPrice.assertTrue(actualPrice <= underPriceLink.getPrice(),
+                    String.format("Price %d is bigger then %d", actualPrice, underPriceLink.getPrice()));
+        });
+        softAssertPrice.assertAll();
+    }
+
+    @Test
+    public void checkFromToPriceFilterTest() {
+        HomePage homePage = new HomePage(this.driver);
+        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), "samsung");
+        AbstractPage.click(this.driver, homePage.getSearchButton());
+
+        FromToPriceLink fromToPriceLink = new FromToPriceLink(this.driver);
+        AbstractPage.click(this.driver, fromToPriceLink.getLink());
+
+        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
+        List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
+        List<WebElement> searchedItemsPrices = searchedResultPage.getSearchedItemsPrices();
+        Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
+        Assert.assertFalse(searchedItemsPrices.isEmpty(), "There are no searched items prices in list.");
+
+        SoftAssert softAssertTitle = new SoftAssert();
+        searchedItemsTitles.forEach(searchedItemTitle -> {
+            softAssertTitle.assertTrue(searchedItemTitle.getText().toLowerCase(Locale.ROOT).contains("samsung"),
+                    String.format("Product title doesn't contain brand name \"%s\"", "samsung"));
+            LOGGER.info(searchedItemTitle.getText());
+        });
+        softAssertTitle.assertAll();
+
+        SoftAssert softAssertPrice = new SoftAssert();
+        searchedItemsPrices.forEach(searchedItemPrice -> {
+            String searchedItemPriceString = searchedItemPrice.getText();
+            searchedItemPriceString = StringUtils.replaceChars(searchedItemPriceString, ",", ".");
+            String[] prices = StringUtils.substringsBetween(searchedItemPriceString, "$", ".");
+
+            if(prices.length == 1) {
+                int actualPrice = Integer.parseInt(prices[0]);
+                softAssertPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualPrice
+                                && actualPrice <= fromToPriceLink.getToPrice(),
+                        String.format("Price %d is not in range from %d to %d", actualPrice,
+                                fromToPriceLink.getFromPrice(), fromToPriceLink.getToPrice()));
+            } else {
+                int actualMinPrice = Integer.parseInt(prices[0]);
+                int actualMaxPrice = Integer.parseInt(prices[1]);
+                softAssertPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualMinPrice
+                                && actualMaxPrice <= fromToPriceLink.getToPrice(),
+                        String.format("Price %d-%d is not in range from %d to %d", actualMinPrice, actualMaxPrice,
+                                fromToPriceLink.getFromPrice(), fromToPriceLink.getToPrice()));
+            }
+        });
+        softAssertPrice.assertAll();
+    }
+
+    @Test
+    public void checkStorageCapacityFilter() {
+        HomePage homePage = new HomePage(this.driver);
+        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), "samsung");
+        AbstractPage.click(this.driver, homePage.getSearchButton());
+
+        StorageCapacityBlock storageCapacityBlock = new StorageCapacityBlock(this.driver);
+        storageCapacityBlock.clickCheckbox();
+
+        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
+        List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
+        Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
+
+        SoftAssert softAssertItemStorageCapacity = new SoftAssert();
+        searchedResultPage.getSearchedItemsLinks().forEach(searchedItemLink -> {
+            String oldTab = this.driver.getWindowHandle();
+            AbstractPage.click(this.driver, searchedItemLink);
+            List<String> newTab = new ArrayList<>(driver.getWindowHandles());
+            newTab.remove(oldTab);
+            this.driver.switchTo().window(newTab.get(0));
+
+            ItemsSpecificBlock itemsSpecificBlock = new ItemsSpecificBlock(this.driver);
+            String itemStorageCapacity = itemsSpecificBlock.getStorageCapacity().getText();
+            itemStorageCapacity = StringUtils.deleteWhitespace(itemStorageCapacity);
+            softAssertItemStorageCapacity.assertEquals(itemStorageCapacity.toLowerCase(Locale.ROOT),
+                    storageCapacityBlock.getLabelText().toLowerCase(Locale.ROOT),
+                    String.format("Product storage capacity is not %s.", storageCapacityBlock.getLabelText()));
+
+            this.driver.close();
+            this.driver.switchTo().window(oldTab);
+        });
+        softAssertItemStorageCapacity.assertAll();
     }
 
     @AfterMethod

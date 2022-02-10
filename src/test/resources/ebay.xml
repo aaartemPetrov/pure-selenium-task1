@@ -18,6 +18,10 @@
             <class name="com.solvd.task1.AbstractTest">
                 <methods>
                     <include name="checkSearchTest"/>
+                    <include name="checkSearchTooltipTest"/>
+                    <include name="checkUnderPriceFilterTest"/>
+                    <include name="checkFromToPriceFilterTest"/>
+                    <include name="checkStorageCapacityFilter"/>
                 </methods>
             </class>
         </classes>
