@@ -15,11 +15,18 @@
         <testNgVersion>7.5</testNgVersion>
         <logbackVersion>1.2.10</logbackVersion>
         <apacheStringUtilsVersion>3.12.0</apacheStringUtilsVersion>
+        <apacheFileUtilsVersion>2.6</apacheFileUtilsVersion>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apacheFileUtilsVersion}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
