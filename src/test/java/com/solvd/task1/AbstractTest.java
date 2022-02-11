@@ -12,27 +12,26 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class AbstractTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
-    private WebDriver driver;
+    private Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
 
     @BeforeMethod
     public void setup() {
         System.setProperty("webdriver.chrome.driver", "/Users/apetrov/Documents/SeleniumServer/chromedriver");
-        driver = new ChromeDriver();
+        this.threadIdDrivers.put(Thread.currentThread().getId(), new ChromeDriver());
     }
 
     @Test
     public void checkSearchTooltipTest() {
-        HomePage homePage = new HomePage(this.driver);
+        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        HomePage homePage = new HomePage(driver);
         AbstractPage.sendKeys(driver, homePage.getSearchInput(), "a");
 
-        SearchTooltip searchTooltip = new SearchTooltip(this.driver);
+        SearchTooltip searchTooltip = new SearchTooltip(driver);
         WebElement tooltip = searchTooltip.getSearchTooltip();
         Assert.assertNotNull(tooltip, "Tooltip is null.");
         Assert.assertFalse(searchTooltip.getTooltips().isEmpty(), "Tooltip popup is empty");
@@ -45,11 +44,12 @@ public class AbstractTest {
 
     @Test(dataProvider = "brandNamesForSearch")
     public void checkSearchTest(String brandName) {
-        HomePage homePage = new HomePage(this.driver);
-        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), brandName);
-        AbstractPage.click(this.driver, homePage.getSearchButton());
+        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        HomePage homePage = new HomePage(driver);
+        AbstractPage.sendKeys(driver, homePage.getSearchInput(), brandName);
+        AbstractPage.click(driver, homePage.getSearchButton());
 
-        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
+        SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         List<WebElement> searchedItems = searchedResultPage.getSearchedItemsTitles();
         Assert.assertFalse(searchedItems.isEmpty(), "There are no searched items in list.");
 
@@ -64,14 +64,15 @@ public class AbstractTest {
 
     @Test
     public void checkUnderPriceFilterTest() {
-        HomePage homePage = new HomePage(this.driver);
-        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), "samsung");
-        AbstractPage.click(this.driver, homePage.getSearchButton());
+        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        HomePage homePage = new HomePage(driver);
+        AbstractPage.sendKeys(driver, homePage.getSearchInput(), "samsung");
+        AbstractPage.click(driver, homePage.getSearchButton());
 
-        UnderPriceLink underPriceLink = new UnderPriceLink(this.driver);
-        AbstractPage.click(this.driver, underPriceLink.getLink());
+        UnderPriceLink underPriceLink = new UnderPriceLink(driver);
+        AbstractPage.click(driver, underPriceLink.getLink());
 
-        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
+        SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
         List<WebElement> searchedItemsPrices = searchedResultPage.getSearchedItemsPrices();
         Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
@@ -98,14 +99,15 @@ public class AbstractTest {
 
     @Test
     public void checkFromToPriceFilterTest() {
-        HomePage homePage = new HomePage(this.driver);
-        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), "samsung");
-        AbstractPage.click(this.driver, homePage.getSearchButton());
+        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        HomePage homePage = new HomePage(driver);
+        AbstractPage.sendKeys(driver, homePage.getSearchInput(), "samsung");
+        AbstractPage.click(driver, homePage.getSearchButton());
 
-        FromToPriceLink fromToPriceLink = new FromToPriceLink(this.driver);
-        AbstractPage.click(this.driver, fromToPriceLink.getLink());
+        FromToPriceLink fromToPriceLink = new FromToPriceLink(driver);
+        AbstractPage.click(driver, fromToPriceLink.getLink());
 
-        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
+        SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
         List<WebElement> searchedItemsPrices = searchedResultPage.getSearchedItemsPrices();
         Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
@@ -145,42 +147,44 @@ public class AbstractTest {
 
     @Test
     public void checkStorageCapacityFilter() {
-        HomePage homePage = new HomePage(this.driver);
-        AbstractPage.sendKeys(this.driver, homePage.getSearchInput(), "samsung");
-        AbstractPage.click(this.driver, homePage.getSearchButton());
+        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        HomePage homePage = new HomePage(driver);
+        AbstractPage.sendKeys(driver, homePage.getSearchInput(), "samsung");
+        AbstractPage.click(driver, homePage.getSearchButton());
 
-        StorageCapacityBlock storageCapacityBlock = new StorageCapacityBlock(this.driver);
+        StorageCapacityBlock storageCapacityBlock = new StorageCapacityBlock(driver);
         storageCapacityBlock.clickCheckbox();
 
-        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
+        SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
         Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
 
         SoftAssert softAssertItemStorageCapacity = new SoftAssert();
         searchedResultPage.getSearchedItemsLinks().forEach(searchedItemLink -> {
-            String oldTab = this.driver.getWindowHandle();
-            AbstractPage.click(this.driver, searchedItemLink);
+            String oldTab = driver.getWindowHandle();
+            AbstractPage.click(driver, searchedItemLink);
             List<String> newTab = new ArrayList<>(driver.getWindowHandles());
             newTab.remove(oldTab);
-            this.driver.switchTo().window(newTab.get(0));
+            driver.switchTo().window(newTab.get(0));
 
-            ItemsSpecificBlock itemsSpecificBlock = new ItemsSpecificBlock(this.driver);
+            ItemsSpecificBlock itemsSpecificBlock = new ItemsSpecificBlock(driver);
             String itemStorageCapacity = itemsSpecificBlock.getStorageCapacity().getText();
             itemStorageCapacity = StringUtils.deleteWhitespace(itemStorageCapacity);
             softAssertItemStorageCapacity.assertEquals(itemStorageCapacity.toLowerCase(Locale.ROOT),
                     storageCapacityBlock.getLabelText().toLowerCase(Locale.ROOT),
                     String.format("Product storage capacity is not %s.", storageCapacityBlock.getLabelText()));
 
-            this.driver.close();
-            this.driver.switchTo().window(oldTab);
+            driver.close();
+            driver.switchTo().window(oldTab);
         });
         softAssertItemStorageCapacity.assertAll();
     }
 
     @AfterMethod
     public void end() {
-        this.driver.close();
-        this.driver.quit();
+        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        driver.close();
+        driver.quit();
     }
 
 }

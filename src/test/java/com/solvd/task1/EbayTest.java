@@ -20,9 +20,9 @@ public class EbayTest {
     private WebDriver driver;
 
     @BeforeMethod
-    public synchronized void setup() {
+    public void setup() {
         System.setProperty("webdriver.chrome.driver", "/Users/apetrov/Documents/SeleniumServer/chromedriver");
-        driver = new ChromeDriver();
+        this.driver = new ChromeDriver();
     }
 
     @Test
@@ -59,7 +59,9 @@ public class EbayTest {
     }*/
 
     @AfterMethod
-    public synchronized void end() {
+    public void end() {
+        this.driver.close();
+        this.driver.quit();
     }
 
 }

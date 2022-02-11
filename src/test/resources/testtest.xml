@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite parallel="methods" thread-count="3" name="testTestSuit">
+
+    <test name="testTest">
+        <classes>
+            <class name="com.solvd.task1.TestTest">
+                <methods>
+                    <include name="check1Test"/>
+                    <include name="check2Test"/>
+                    <include name="check3Test"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
