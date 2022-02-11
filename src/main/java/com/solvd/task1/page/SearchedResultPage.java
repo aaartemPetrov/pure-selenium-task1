@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SearchedResultPage {
 
-    private WebDriver driver;
+    private final WebDriver driver;
     @FindBy(css = ".srp-results *[class=s-item__title]")
     private List<WebElement> searchedItemsTitles;
     @FindBy(css = ".srp-results div.s-item__detail:first-of-type span.s-item__price")

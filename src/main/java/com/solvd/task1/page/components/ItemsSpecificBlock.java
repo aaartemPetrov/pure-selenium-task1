@@ -11,7 +11,7 @@ import java.time.Duration;
 
 public class ItemsSpecificBlock {
 
-    private WebDriver driver;
+    private final WebDriver driver;
     private WebElement storageCapacity;
 
     public ItemsSpecificBlock(WebDriver driver) {

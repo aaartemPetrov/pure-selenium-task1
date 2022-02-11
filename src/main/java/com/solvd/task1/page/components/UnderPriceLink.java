@@ -12,9 +12,9 @@ import java.time.Duration;
 
 public class UnderPriceLink {
 
-    private WebDriver driver;
+    private final WebDriver driver;
     private WebElement link;
-    private int price;
+    private final int price;
 
     public UnderPriceLink(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -23,7 +23,7 @@ public class UnderPriceLink {
         WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         WebElement underPriceLink = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("#s0-14-11-6-3-query_answer1-answer-2-1-0-list li:nth-child(1)")));
-        if(underPriceLink != null) {
+        if (underPriceLink != null) {
             this.link = underPriceLink;
         }
         String priceString = this.link.getText();

@@ -13,7 +13,7 @@ import java.util.Map;
 public class TestTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(com.solvd.task1.EbayTest.class);
-    private Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
+    private final Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
 
     @BeforeMethod
     public synchronized void setup() {

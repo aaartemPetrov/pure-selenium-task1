@@ -7,7 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class SignInPage {
 
-    private WebDriver driver;
+    private final WebDriver driver;
     @FindBy(css = "#userid")
     private WebElement userInput;
     @FindBy(css = "#signin-continue-btn")

@@ -17,7 +17,7 @@ import java.util.*;
 public class AbstractTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
-    private Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
+    private final Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
 
     @BeforeMethod
     public void setup() {
@@ -39,7 +39,7 @@ public class AbstractTest {
 
     @DataProvider(name = "brandNamesForSearch")
     public Object[][] names() {
-            return new Object[][] {{"Sony"}, {"Samsung"}, {"Apple"}, {"Xiaomi"}, {"Huawei"}};
+        return new Object[][]{{"Sony"}, {"Samsung"}, {"Apple"}, {"Xiaomi"}, {"Huawei"}};
     }
 
     @Test(dataProvider = "brandNamesForSearch")
@@ -127,7 +127,7 @@ public class AbstractTest {
             searchedItemPriceString = StringUtils.replaceChars(searchedItemPriceString, ",", ".");
             String[] prices = StringUtils.substringsBetween(searchedItemPriceString, "$", ".");
 
-            if(prices.length == 1) {
+            if (prices.length == 1) {
                 int actualPrice = Integer.parseInt(prices[0]);
                 softAssertPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualPrice
                                 && actualPrice <= fromToPriceLink.getToPrice(),

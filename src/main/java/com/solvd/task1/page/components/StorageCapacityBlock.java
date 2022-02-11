@@ -12,7 +12,7 @@ import java.time.Duration;
 
 public class StorageCapacityBlock {
 
-    private WebDriver driver;
+    private final WebDriver driver;
     private WebElement checkbox;
     private String labelText;
 

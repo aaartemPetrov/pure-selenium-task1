@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SearchTooltip {
 
-    private WebDriver driver;
+    private final WebDriver driver;
     private WebElement searchTooltip;
     private List<WebElement> tooltips;
 
@@ -22,7 +22,7 @@ public class SearchTooltip {
         /*this.driver.get(driver.getCurrentUrl());*/
         WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         WebElement searchTooltip = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#gAC")));
-        if(searchTooltip != null) {
+        if (searchTooltip != null) {
             this.searchTooltip = searchTooltip;
         }
         this.tooltips = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#gAC li a.ghAC_sugg")));

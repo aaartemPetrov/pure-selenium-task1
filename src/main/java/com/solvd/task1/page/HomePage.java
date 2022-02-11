@@ -4,14 +4,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class HomePage {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HomePage.class);
-
-    private WebDriver driver;
+    private final WebDriver driver;
     @FindBy(css = "#gh-f input[type=text]")
     private WebElement searchInput;
     @FindBy(css = "#gh-f input[type=submit]")

@@ -38,7 +38,7 @@ public class EbayTest {
         SoftAssert softAssert = new SoftAssert();
         searchedItems.forEach(searchedItem -> {
             softAssert.assertTrue(searchedItem.getText().toLowerCase(Locale.ROOT).contains("samsung"),
-                    String.format("Product title doesn't contain brand name \"Samsung\""));
+                    "Product title doesn't contain brand name \"Samsung\"");
             LOGGER.info(searchedItem.getText());
         });
         softAssert.assertAll();

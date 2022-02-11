@@ -12,10 +12,10 @@ import java.time.Duration;
 
 public class FromToPriceLink {
 
-    private WebDriver driver;
+    private final WebDriver driver;
     private WebElement link;
-    private int fromPrice;
-    private int toPrice;
+    private final int fromPrice;
+    private final int toPrice;
 
     public FromToPriceLink(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -24,7 +24,7 @@ public class FromToPriceLink {
         WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         WebElement fromToPriceLink = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("#s0-14-11-6-3-query_answer1-answer-2-1-0-list li:nth-child(2)")));
-        if(fromToPriceLink != null) {
+        if (fromToPriceLink != null) {
             this.link = fromToPriceLink;
         }
         String priceString = this.link.getText();
