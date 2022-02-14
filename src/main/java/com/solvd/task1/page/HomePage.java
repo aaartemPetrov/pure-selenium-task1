@@ -52,4 +52,5 @@ public class HomePage {
     public void setSearchButton(WebElement searchButton) {
         this.searchButton = searchButton;
     }
+
 }

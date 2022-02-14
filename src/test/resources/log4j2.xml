@@ -12,7 +12,7 @@
         <Logger name="org.asynchttpclient.netty" level="WARN"/>
 
         <Root level="info" additivity="false">
-            <AppenderRef ref="console"/>s
+            <AppenderRef ref="console"/>
         </Root>
 
     </Loggers>

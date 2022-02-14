@@ -19,7 +19,6 @@ public class SearchTooltip {
     public SearchTooltip(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
-        /*this.driver.get(driver.getCurrentUrl());*/
         WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         WebElement searchTooltip = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#gAC")));
         if (searchTooltip != null) {

@@ -32,7 +32,6 @@ public class FromToPriceLink {
         String[] fromToPrices = StringUtils.substringsBetween(priceString, "$", ".");
         this.fromPrice = Integer.parseInt(fromToPrices[0]);
         this.toPrice = Integer.parseInt(fromToPrices[1]);
-        System.out.println();
     }
 
     public WebElement getLink() {
