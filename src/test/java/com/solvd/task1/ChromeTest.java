@@ -2,14 +2,17 @@ package com.solvd.task1;
 
 import com.solvd.task1.page.HomePage;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,11 +21,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChromeTest {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(ChromeTest.class);
     private final Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
 
     @BeforeMethod
@@ -31,7 +36,7 @@ public class ChromeTest {
         desiredCapabilities.setBrowserName("chrome");
         desiredCapabilities.setPlatform(Platform.MAC);
         this.threadIdDrivers.put(Thread.currentThread().getId(),
-                new RemoteWebDriver(new URL("http://192.168.89.11:4444/wd/hub"), desiredCapabilities));
+                new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities));
     }
 
     @Test
@@ -40,6 +45,7 @@ public class ChromeTest {
         HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("samsung");
         Thread.sleep(2000);
+        Assert.assertFalse(true);
     }
 
     @Test
@@ -48,27 +54,37 @@ public class ChromeTest {
         HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("sony");
         Thread.sleep(2000);
+        Assert.assertFalse(true);
     }
 
     @Test
-    public void check3Test() throws InterruptedException, IOException {
+    public void check3Test() throws InterruptedException {
         WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
-        try {
             HomePage homePage = new HomePage(driver);
             homePage.writeInSearchLine("apple");
             Thread.sleep(2000);
             Assert.assertFalse(true);
-        } catch (Throwable e) {
-            File screenshotFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(screenshotFile, new File("/Users/apetrov/Documents/1.png"));
-        }
     }
 
     @AfterMethod
-    public synchronized void end() {
+    public synchronized void end(ITestResult testResult) throws IOException {
         WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+
+        if(testResult.getStatus() == ITestResult.FAILURE) {
+            File screenshotFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            String screenshotName = "[" + testResult.getName() + "] " + getScreenshotName();
+            FileUtils.copyFile(screenshotFile, new File("/Users/apetrov/Documents/" + screenshotName + ".png"));
+            LOGGER.info("Screenshot is captured successfully.");
+        }
         driver.close();
         driver.quit();
+    }
+
+    public String getScreenshotName() {
+        String className = StringUtils.substringAfterLast(getClass().getName(), ".");
+        String dateTime = StringUtils.substringBefore(LocalDateTime.now().toString(), ".");
+        String result =  "[" + className + "] [" + dateTime + "]";
+        return result;
     }
 
 }
