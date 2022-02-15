@@ -65,8 +65,8 @@ public class FirefoxTest {
     @AfterMethod
     public synchronized void end(ITestResult testResult) throws IOException {
         WebDriver driver = WebDriverPool.get();
-        if(testResult.getStatus() == ITestResult.FAILURE) {
-            File screenshotFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        if (testResult.getStatus() == ITestResult.FAILURE) {
+            File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             String screenshotName = "[" + testResult.getName() + "] " + getScreenshotName();
             FileUtils.copyFile(screenshotFile, new File("/Users/apetrov/Documents/" + screenshotName + ".png"));
             LOGGER.info("Screenshot is captured successfully.");
@@ -75,7 +75,7 @@ public class FirefoxTest {
 
     @AfterSuite
     public synchronized void quit() {
-        for(Map.Entry<Long, WebDriver> entry : WebDriverPool.entrySet()) {
+        for (Map.Entry<Long, WebDriver> entry : WebDriverPool.entrySet()) {
             synchronized (entry.getValue()) {
                 if (entry.getValue() != null) {
                     entry.getValue().quit();
@@ -87,8 +87,7 @@ public class FirefoxTest {
     public String getScreenshotName() {
         String className = StringUtils.substringAfterLast(getClass().getName(), ".");
         String dateTime = StringUtils.substringBefore(LocalDateTime.now().toString(), ".");
-        String result =  "[" + className + "] [" + dateTime + "]";
-        return result;
+        return "[" + className + "] [" + dateTime + "]";
     }
 
 }

@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ChromeTest {
 
@@ -59,17 +57,17 @@ public class ChromeTest {
     @Test
     public void check3Test() throws InterruptedException {
         WebDriver driver = WebDriverPool.get();
-            HomePage homePage = new HomePage(driver);
-            homePage.writeInSearchLine("apple");
-            Thread.sleep(2000);
-            Assert.assertFalse(true);
+        HomePage homePage = new HomePage(driver);
+        homePage.writeInSearchLine("apple");
+        Thread.sleep(2000);
+        Assert.assertFalse(true);
     }
 
     @AfterMethod
     public synchronized void end(ITestResult testResult) throws IOException {
         WebDriver driver = WebDriverPool.get();
-        if(testResult.getStatus() == ITestResult.FAILURE) {
-            File screenshotFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        if (testResult.getStatus() == ITestResult.FAILURE) {
+            File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             String screenshotName = "[" + testResult.getName() + "] " + getScreenshotName();
             FileUtils.copyFile(screenshotFile, new File("/Users/apetrov/Documents/" + screenshotName + ".png"));
             LOGGER.info("Screenshot is captured successfully.");
@@ -81,7 +79,7 @@ public class ChromeTest {
     public String getScreenshotName() {
         String className = StringUtils.substringAfterLast(getClass().getName(), ".");
         String dateTime = StringUtils.substringBefore(LocalDateTime.now().toString(), ".");
-        String result =  "[" + className + "] [" + dateTime + "]";
+        String result = "[" + className + "] [" + dateTime + "]";
         return result;
     }
 
