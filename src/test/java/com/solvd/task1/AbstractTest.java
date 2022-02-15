@@ -2,6 +2,7 @@ package com.solvd.task1;
 
 import com.solvd.task1.page.*;
 import com.solvd.task1.page.components.*;
+import com.solvd.task1.service.WebDriverPool;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,17 +18,17 @@ import java.util.*;
 public class AbstractTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
-    private final Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
+
 
     @BeforeMethod
     public void setup() {
         System.setProperty("webdriver.chrome.driver", "/Users/apetrov/Documents/SeleniumServer/chromedriver");
-        this.threadIdDrivers.put(Thread.currentThread().getId(), new ChromeDriver());
+        WebDriverPool.add(new ChromeDriver());
     }
 
     @Test
     public void checkSearchTooltipTest() {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         AbstractPage.sendKeys(driver, homePage.getSearchInput(), "a");
 
@@ -44,7 +45,7 @@ public class AbstractTest {
 
     @Test(dataProvider = "brandNamesForSearch")
     public void checkSearchTest(String brandName) {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         AbstractPage.sendKeys(driver, homePage.getSearchInput(), brandName);
         AbstractPage.click(driver, homePage.getSearchButton());
@@ -64,7 +65,7 @@ public class AbstractTest {
 
     @Test
     public void checkUnderPriceFilterTest() {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         AbstractPage.sendKeys(driver, homePage.getSearchInput(), "samsung");
         AbstractPage.click(driver, homePage.getSearchButton());
@@ -99,7 +100,7 @@ public class AbstractTest {
 
     @Test
     public void checkFromToPriceFilterTest() {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         AbstractPage.sendKeys(driver, homePage.getSearchInput(), "samsung");
         AbstractPage.click(driver, homePage.getSearchButton());
@@ -147,7 +148,7 @@ public class AbstractTest {
 
     @Test
     public void checkStorageCapacityFilter() {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         AbstractPage.sendKeys(driver, homePage.getSearchInput(), "samsung");
         AbstractPage.click(driver, homePage.getSearchButton());
@@ -182,7 +183,7 @@ public class AbstractTest {
 
     @AfterMethod
     public void end() {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         driver.close();
         driver.quit();
     }

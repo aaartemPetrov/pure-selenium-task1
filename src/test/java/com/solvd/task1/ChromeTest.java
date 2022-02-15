@@ -1,6 +1,7 @@
 package com.solvd.task1;
 
 import com.solvd.task1.page.HomePage;
+import com.solvd.task1.service.WebDriverPool;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.OutputType;
@@ -28,20 +29,18 @@ import java.util.Map;
 public class ChromeTest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ChromeTest.class);
-    private final Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
 
     @BeforeMethod
     public synchronized void setup() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName("chrome");
         desiredCapabilities.setPlatform(Platform.MAC);
-        this.threadIdDrivers.put(Thread.currentThread().getId(),
-                new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities));
+        WebDriverPool.add(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities));
     }
 
     @Test
     public void check1Test() throws InterruptedException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("samsung");
         Thread.sleep(2000);
@@ -50,7 +49,7 @@ public class ChromeTest {
 
     @Test
     public void check2Test() throws InterruptedException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("sony");
         Thread.sleep(2000);
@@ -59,7 +58,7 @@ public class ChromeTest {
 
     @Test
     public void check3Test() throws InterruptedException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
             HomePage homePage = new HomePage(driver);
             homePage.writeInSearchLine("apple");
             Thread.sleep(2000);
@@ -68,8 +67,7 @@ public class ChromeTest {
 
     @AfterMethod
     public synchronized void end(ITestResult testResult) throws IOException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
-
+        WebDriver driver = WebDriverPool.get();
         if(testResult.getStatus() == ITestResult.FAILURE) {
             File screenshotFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
             String screenshotName = "[" + testResult.getName() + "] " + getScreenshotName();

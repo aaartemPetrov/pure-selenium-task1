@@ -1,6 +1,7 @@
 package com.solvd.task1;
 
 import com.solvd.task1.page.HomePage;
+import com.solvd.task1.service.WebDriverPool;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.OutputType;
@@ -20,26 +21,23 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 public class FirefoxTest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FirefoxTest.class);
-    private final Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
 
     @BeforeMethod
     public synchronized void setup() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName("firefox");
         desiredCapabilities.setPlatform(Platform.MAC);
-        this.threadIdDrivers.put(Thread.currentThread().getId(),
-                new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities));
+        WebDriverPool.add(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities));
     }
 
     @Test
     public void check1Test() throws InterruptedException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("samsung");
         Thread.sleep(2000);
@@ -48,7 +46,7 @@ public class FirefoxTest {
 
     @Test
     public void check2Test() throws InterruptedException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("sony");
         Thread.sleep(2000);
@@ -57,7 +55,7 @@ public class FirefoxTest {
 
     @Test
     public void check3Test() throws InterruptedException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
+        WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("apple");
         Thread.sleep(2000);
@@ -66,8 +64,7 @@ public class FirefoxTest {
 
     @AfterMethod
     public synchronized void end(ITestResult testResult) throws IOException {
-        WebDriver driver = threadIdDrivers.get(Thread.currentThread().getId());
-
+        WebDriver driver = WebDriverPool.get();
         if(testResult.getStatus() == ITestResult.FAILURE) {
             File screenshotFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
             String screenshotName = "[" + testResult.getName() + "] " + getScreenshotName();
@@ -78,7 +75,7 @@ public class FirefoxTest {
 
     @AfterSuite
     public synchronized void quit() {
-        for(Map.Entry<Long, WebDriver> entry : threadIdDrivers.entrySet()) {
+        for(Map.Entry<Long, WebDriver> entry : WebDriverPool.entrySet()) {
             synchronized (entry.getValue()) {
                 if (entry.getValue() != null) {
                     entry.getValue().quit();

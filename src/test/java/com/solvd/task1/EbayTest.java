@@ -44,6 +44,9 @@ public class EbayTest {
         softAssert.assertAll();
     }
 
+    /**
+     * I met captcha, because of this i couldn't do this test.
+     */
     /*@Test
     public void checkSignInTest() {
         HomePage homePage = new HomePage(this.driver);
