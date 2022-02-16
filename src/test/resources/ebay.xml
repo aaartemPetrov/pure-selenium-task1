@@ -3,19 +3,9 @@
 
 <suite name="ebay">
 
-    <test name="ebayTest">
+    <test name="ebayAbstractTest" parallel="methods" thread-count="5">
         <classes>
             <class name="com.solvd.task1.EbayTest">
-                <methods>
-                    <include name="checkSearchTest"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="ebayAbstractTest" parallel="methods" thread-count="3">
-        <classes>
-            <class name="com.solvd.task1.AbstractTest">
                 <methods>
                     <include name="checkSearchTest"/>
                     <include name="checkSearchTooltipTest"/>

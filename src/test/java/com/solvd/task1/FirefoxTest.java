@@ -1,6 +1,7 @@
 package com.solvd.task1;
 
 import com.solvd.task1.page.HomePage;
+import com.solvd.task1.service.Configuration;
 import com.solvd.task1.service.WebDriverPool;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,8 +9,10 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -26,7 +29,7 @@ import java.util.Map;
 public class FirefoxTest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FirefoxTest.class);
-    private final String localhost = "http://localhost:4444/wd/hub";
+    private final String localhost = Configuration.getProperty("selenium_url");
 
     @BeforeMethod
     public synchronized void setup() throws MalformedURLException {

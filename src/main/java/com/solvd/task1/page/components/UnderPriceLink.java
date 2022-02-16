@@ -1,5 +1,6 @@
 package com.solvd.task1.page.components;
 
+import com.solvd.task1.service.WebDriverPool;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,8 +18,8 @@ public class UnderPriceLink {
     private final int price;
 
     public UnderPriceLink(WebDriver driver) {
-        PageFactory.initElements(driver, this);
         this.driver = driver;
+        PageFactory.initElements(this.driver, this);
 
         WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         WebElement underPriceLink = wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -33,10 +34,6 @@ public class UnderPriceLink {
 
     public WebElement getLink() {
         return this.link;
-    }
-
-    public void setLink(WebElement link) {
-        this.link = link;
     }
 
     public int getPrice() {

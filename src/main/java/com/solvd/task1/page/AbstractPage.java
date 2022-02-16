@@ -1,30 +1,60 @@
 package com.solvd.task1.page;
 
+import com.solvd.task1.service.Configuration;
+import com.solvd.task1.service.WebDriverPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class AbstractPage {
+public abstract class AbstractPage {
 
     private static final Logger LOGGER = LogManager.getLogger(AbstractPage.class);
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
+    private WebDriver driver;
+    protected String pageURL;
 
-    public static void click(WebDriver driver, WebElement element) {
+    public AbstractPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(this.driver, this);
+    }
+
+    public void open() {
+        this.driver.get(this.pageURL);
+    }
+
+    public static void click(WebElement element) {
         String elementName = element.getAccessibleName();
-        new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.elementToBeClickable(element)).click();
+        new WebDriverWait(WebDriverPool.get(), TIMEOUT).until(ExpectedConditions.elementToBeClickable(element)).click();
         LOGGER.info("\"" + elementName + "\"" + " was clicked.");
     }
 
-    public static void sendKeys(WebDriver driver, WebElement element, String string) {
+    public static void sendKeys(WebElement element, String string) {
         String elementName = element.getAccessibleName();
-        new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.visibilityOf(element)).sendKeys(string);
+        new WebDriverWait(WebDriverPool.get(), TIMEOUT).until(ExpectedConditions.visibilityOf(element)).sendKeys(string);
         LOGGER.info("\"" + elementName + "\"" + " was wrote in to a " + "\"" + element.getAccessibleName() + "\".");
     }
 
+    public WebDriver getDriver() {
+        return this.driver;
+    }
 
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public String getPageURL() {
+        return this.pageURL;
+    }
+
+    public void setPageURL(String pageURL) {
+        this.pageURL = pageURL;
+    }
 }

@@ -1,6 +1,7 @@
 package com.solvd.task1;
 
 import com.solvd.task1.page.HomePage;
+import com.solvd.task1.service.Configuration;
 import com.solvd.task1.service.WebDriverPool;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +28,7 @@ import java.time.LocalDateTime;
 public class ChromeTest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ChromeTest.class);
-    private final String localhost = "http://localhost:4444/wd/hub";
+    private final String localhost = Configuration.getProperty("selenium_url");
 
     @BeforeMethod
     public synchronized void setup() throws MalformedURLException {

@@ -15,25 +15,17 @@ public class ItemsSpecificBlock {
     private WebElement storageCapacity;
 
     public ItemsSpecificBlock(WebDriver driver) {
-        PageFactory.initElements(driver, this);
         this.driver = driver;
+        PageFactory.initElements(driver, this);
 
         new WebDriverWait(this.driver, Duration.ofSeconds(10)).until(
                 ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.tabbable")));
         this.storageCapacity = this.driver.findElement(
-                By.xpath("div.ux-labels-values.col-12.ux-labels-values--storageCapacity div.ux-labels-values__values span"));
+                By.cssSelector("div.ux-labels-values.col-12.ux-labels-values--storageCapacity div.ux-labels-values__values span"));
     }
 
     public String getStorageCapacityText() {
         return this.storageCapacity.getText();
-    }
-
-    public WebElement getStorageCapacity() {
-        return storageCapacity;
-    }
-
-    public void setStorageCapacity(WebElement storageCapacity) {
-        this.storageCapacity = storageCapacity;
     }
 
 }

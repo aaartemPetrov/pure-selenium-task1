@@ -18,8 +18,8 @@ public class FromToPriceLink {
     private final int toPrice;
 
     public FromToPriceLink(WebDriver driver) {
-        PageFactory.initElements(driver, this);
         this.driver = driver;
+        PageFactory.initElements(driver, this);
 
         WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         WebElement fromToPriceLink = wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -36,10 +36,6 @@ public class FromToPriceLink {
 
     public WebElement getLink() {
         return link;
-    }
-
-    public void setLink(WebElement link) {
-        this.link = link;
     }
 
     public int getFromPrice() {

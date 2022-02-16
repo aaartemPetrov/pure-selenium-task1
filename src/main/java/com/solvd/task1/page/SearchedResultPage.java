@@ -4,14 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SearchedResultPage {
+public class SearchedResultPage extends AbstractPage {
 
-    private final WebDriver driver;
     @FindBy(css = ".srp-results *[class=s-item__title]")
     private List<WebElement> itemsTitles;
     @FindBy(css = ".srp-results div.s-item__detail:first-of-type span.s-item__price")
@@ -23,19 +21,18 @@ public class SearchedResultPage {
 
 
     public SearchedResultPage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
-        this.driver = driver;
-        this.driver.get(driver.getCurrentUrl());
+        super(driver);
+        setPageURL(driver.getCurrentUrl());
     }
 
     public List<String> getItemsNames() {
-        return itemsTitles.stream()
+        return this.itemsTitles.stream()
                 .map(itemTitle -> itemTitle.getText())
                 .collect(Collectors.toList());
     }
 
     public List<String[]> getIntItemPrices() {
-        return itemsPrices.stream()
+        return this.itemsPrices.stream()
                 .map(itemPrice -> {
                     String itemPriceString = itemPrice.getText();
                     itemPriceString = StringUtils.replaceChars(itemPriceString, ",", ".");
@@ -44,36 +41,16 @@ public class SearchedResultPage {
                 .collect(Collectors.toList());
     }
 
-    public List<WebElement> getItemsTitles() {
-        return this.itemsTitles;
+    public int itemTitlesCount() {
+        return this.itemsTitles.size();
     }
 
-    public void setItemsTitles(List<WebElement> itemsTitles) {
-        this.itemsTitles = itemsTitles;
-    }
-
-    public List<WebElement> getItemsPrices() {
-        return this.itemsPrices;
-    }
-
-    public void setItemsPrices(List<WebElement> itemsPrices) {
-        this.itemsPrices = itemsPrices;
-    }
-
-    public WebElement getFromToPriceLink() {
-        return this.fromToPriceLink;
-    }
-
-    public void setFromToPriceLink(WebElement fromToPriceLink) {
-        this.fromToPriceLink = fromToPriceLink;
+    public int itemPricesCount() {
+        return this.itemsTitles.size();
     }
 
     public List<WebElement> getItemsLinks() {
-        return this.itemsLinks;
-    }
-
-    public void setItemsLinks(List<WebElement> itemsLinks) {
-        this.itemsLinks = itemsLinks;
+        return itemsLinks;
     }
 
 }

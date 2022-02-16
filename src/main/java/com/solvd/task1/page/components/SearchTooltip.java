@@ -17,8 +17,8 @@ public class SearchTooltip {
     private List<WebElement> tooltips;
 
     public SearchTooltip(WebDriver driver) {
-        PageFactory.initElements(driver, this);
         this.driver = driver;
+        PageFactory.initElements(this.driver, this);
         WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         WebElement searchTooltip = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#gAC")));
         if (searchTooltip != null) {
@@ -27,20 +27,8 @@ public class SearchTooltip {
         this.tooltips = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#gAC li a.ghAC_sugg")));
     }
 
-    public WebElement getSearchTooltip() {
-        return this.searchTooltip;
-    }
-
-    public void setSearchTooltip(WebElement searchTooltip) {
-        this.searchTooltip = searchTooltip;
-    }
-
-    public List<WebElement> getTooltips() {
-        return this.tooltips;
-    }
-
-    public void setTooltips(List<WebElement> tooltips) {
-        this.tooltips = tooltips;
+    public int tooltipsCount() {
+        return tooltips.size();
     }
 
 }

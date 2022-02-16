@@ -1,13 +1,12 @@
 package com.solvd.task1.page;
 
+import com.solvd.task1.service.Configuration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
-public class HomePage {
+public class HomePage extends AbstractPage {
 
-    private final WebDriver driver;
     @FindBy(css = "#gh-f input[type=text]")
     private WebElement searchInput;
     @FindBy(css = "#gh-f input[type=submit]")
@@ -16,9 +15,8 @@ public class HomePage {
     private WebElement signInLink;
 
     public HomePage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
-        this.driver = driver;
-        this.driver.get("https://www.ebay.com/");
+        super(driver);
+        setPageURL(Configuration.getProperty("url"));
     }
 
     public void writeInSearchLine(String string) {
