@@ -26,13 +26,14 @@ import java.util.Map;
 public class FirefoxTest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FirefoxTest.class);
+    private final String localhost = "http://localhost:4444/wd/hub";
 
     @BeforeMethod
     public synchronized void setup() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName("firefox");
         desiredCapabilities.setPlatform(Platform.MAC);
-        WebDriverPool.add(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities));
+        WebDriverPool.add(new RemoteWebDriver(new URL(localhost), desiredCapabilities));
     }
 
     @Test

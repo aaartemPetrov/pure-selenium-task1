@@ -2,27 +2,36 @@ package com.solvd.task1;
 
 import com.solvd.task1.page.*;
 import com.solvd.task1.page.components.*;
+import com.solvd.task1.service.TabService;
 import com.solvd.task1.service.WebDriverPool;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 public class AbstractTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
+    private final String localhost = "http://localhost:4444/wd/hub";
 
     @BeforeMethod
-    public void setup() {
-        System.setProperty("webdriver.chrome.driver", "/Users/apetrov/Documents/SeleniumServer/chromedriver");
-        WebDriverPool.add(new ChromeDriver());
+    public void setup() throws MalformedURLException {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        desiredCapabilities.setBrowserName("chrome");
+        desiredCapabilities.setPlatform(Platform.MAC);
+        WebDriverPool.add(new RemoteWebDriver(new URL(localhost), desiredCapabilities));
     }
 
     @Test
@@ -32,8 +41,7 @@ public class AbstractTest {
         AbstractPage.sendKeys(driver, homePage.getSearchInput(), "a");
 
         SearchTooltip searchTooltip = new SearchTooltip(driver);
-        WebElement tooltip = searchTooltip.getSearchTooltip();
-        Assert.assertNotNull(tooltip, "Tooltip is null.");
+        Assert.assertNotNull(searchTooltip.getSearchTooltip(), "Tooltip is null.");
         Assert.assertFalse(searchTooltip.getTooltips().isEmpty(), "Tooltip popup is empty");
     }
 
@@ -50,14 +58,13 @@ public class AbstractTest {
         AbstractPage.click(driver, homePage.getSearchButton());
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
-        List<WebElement> searchedItems = searchedResultPage.getSearchedItemsTitles();
-        Assert.assertFalse(searchedItems.isEmpty(), "There are no searched items in list.");
+        Assert.assertFalse(searchedResultPage.getItemsTitles().isEmpty(), "There are no searched items in list.");
 
         SoftAssert softAssert = new SoftAssert();
-        searchedItems.forEach(searchedItem -> {
-            softAssert.assertTrue(searchedItem.getText().toLowerCase(Locale.ROOT).contains(brandName.toLowerCase(Locale.ROOT)),
+        searchedResultPage.getItemsNames().forEach(itemName -> {
+            softAssert.assertTrue(itemName.toLowerCase(Locale.ROOT).contains(brandName.toLowerCase(Locale.ROOT)),
                     String.format("Product title does not contain brand name \"%s\"", brandName));
-            LOGGER.info(searchedItem.getText());
+            LOGGER.info(itemName);
         });
         softAssert.assertAll();
     }
@@ -73,26 +80,22 @@ public class AbstractTest {
         AbstractPage.click(driver, underPriceLink.getLink());
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
-        List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
-        List<WebElement> searchedItemsPrices = searchedResultPage.getSearchedItemsPrices();
-        Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
-        Assert.assertFalse(searchedItemsPrices.isEmpty(), "There are no searched items prices in list.");
+        Assert.assertFalse(searchedResultPage.getItemsTitles().isEmpty(), "There are no searched items titles in list.");
+        Assert.assertFalse(searchedResultPage.getItemsPrices().isEmpty(), "There are no searched items prices in list.");
 
         SoftAssert softAssertTitle = new SoftAssert();
-        searchedItemsTitles.forEach(searchedItemTitle -> {
-            softAssertTitle.assertTrue(searchedItemTitle.getText().toLowerCase(Locale.ROOT).contains("samsung"),
+        searchedResultPage.getItemsNames().forEach(itemName -> {
+            softAssertTitle.assertTrue(itemName.toLowerCase(Locale.ROOT).contains("samsung"),
                     String.format("Product title doesn't contain brand name \"%s\"", "samsung"));
-            LOGGER.info(searchedItemTitle.getText());
+            LOGGER.info(itemName);
         });
         softAssertTitle.assertAll();
 
         SoftAssert softAssertPrice = new SoftAssert();
-        searchedItemsPrices.forEach(searchedItemPrice -> {
-            String searchedItemPriceString = searchedItemPrice.getText();
-            searchedItemPriceString = StringUtils.replaceChars(searchedItemPriceString, ",", ".");
-            int actualPrice = Integer.parseInt(StringUtils.substringBetween(searchedItemPriceString, "$", "."));
-            softAssertPrice.assertTrue(actualPrice <= underPriceLink.getPrice(),
-                    String.format("Price %d is bigger then %d", actualPrice, underPriceLink.getPrice()));
+        searchedResultPage.getIntItemPrices().forEach(itemPrices -> {
+                int actualItemPrice = Integer.parseInt(itemPrices[0]);
+                softAssertPrice.assertTrue(actualItemPrice <= underPriceLink.getPrice(),
+                        String.format("Price %d is bigger then %d", actualItemPrice, underPriceLink.getPrice()));
         });
         softAssertPrice.assertAll();
     }
@@ -108,34 +111,28 @@ public class AbstractTest {
         AbstractPage.click(driver, fromToPriceLink.getLink());
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
-        List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
-        List<WebElement> searchedItemsPrices = searchedResultPage.getSearchedItemsPrices();
-        Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
-        Assert.assertFalse(searchedItemsPrices.isEmpty(), "There are no searched items prices in list.");
+        Assert.assertFalse(searchedResultPage.getItemsTitles().isEmpty(), "There are no searched items titles in list.");
+        Assert.assertFalse(searchedResultPage.getItemsTitles().isEmpty(), "There are no searched items prices in list.");
 
         SoftAssert softAssertTitle = new SoftAssert();
-        searchedItemsTitles.forEach(searchedItemTitle -> {
-            softAssertTitle.assertTrue(searchedItemTitle.getText().toLowerCase(Locale.ROOT).contains("samsung"),
+        searchedResultPage.getItemsNames().forEach(itemName -> {
+            softAssertTitle.assertTrue(itemName.toLowerCase(Locale.ROOT).contains("samsung"),
                     String.format("Product title doesn't contain brand name \"%s\"", "samsung"));
-            LOGGER.info(searchedItemTitle.getText());
+            LOGGER.info(itemName);
         });
         softAssertTitle.assertAll();
 
         SoftAssert softAssertPrice = new SoftAssert();
-        searchedItemsPrices.forEach(searchedItemPrice -> {
-            String searchedItemPriceString = searchedItemPrice.getText();
-            searchedItemPriceString = StringUtils.replaceChars(searchedItemPriceString, ",", ".");
-            String[] prices = StringUtils.substringsBetween(searchedItemPriceString, "$", ".");
-
-            if (prices.length == 1) {
-                int actualPrice = Integer.parseInt(prices[0]);
+        searchedResultPage.getIntItemPrices().forEach(itemPrices -> {
+            if (itemPrices.length == 1) {
+                int actualPrice = Integer.parseInt(itemPrices[0]);
                 softAssertPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualPrice
                                 && actualPrice <= fromToPriceLink.getToPrice(),
                         String.format("Price %d is not in range from %d to %d", actualPrice,
                                 fromToPriceLink.getFromPrice(), fromToPriceLink.getToPrice()));
             } else {
-                int actualMinPrice = Integer.parseInt(prices[0]);
-                int actualMaxPrice = Integer.parseInt(prices[1]);
+                int actualMinPrice = Integer.parseInt(itemPrices[0]);
+                int actualMaxPrice = Integer.parseInt(itemPrices[1]);
                 softAssertPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualMinPrice
                                 && actualMaxPrice <= fromToPriceLink.getToPrice(),
                         String.format("Price %d-%d is not in range from %d to %d", actualMinPrice, actualMaxPrice,
@@ -156,26 +153,21 @@ public class AbstractTest {
         storageCapacityBlock.clickCheckbox();
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
-        List<WebElement> searchedItemsTitles = searchedResultPage.getSearchedItemsTitles();
-        Assert.assertFalse(searchedItemsTitles.isEmpty(), "There are no searched items titles in list.");
+        Assert.assertFalse(searchedResultPage.getItemsTitles().isEmpty(), "There are no searched items titles in list.");
 
         SoftAssert softAssertItemStorageCapacity = new SoftAssert();
-        searchedResultPage.getSearchedItemsLinks().forEach(searchedItemLink -> {
-            String oldTab = driver.getWindowHandle();
+        searchedResultPage.getItemsLinks().forEach(searchedItemLink -> {
+            TabService tabService = new TabService(driver);
             AbstractPage.click(driver, searchedItemLink);
-            List<String> newTab = new ArrayList<>(driver.getWindowHandles());
-            newTab.remove(oldTab);
-            driver.switchTo().window(newTab.get(0));
+            tabService.switchToNewTab();
 
             ItemsSpecificBlock itemsSpecificBlock = new ItemsSpecificBlock(driver);
-            String itemStorageCapacity = itemsSpecificBlock.getStorageCapacity().getText();
-            itemStorageCapacity = StringUtils.deleteWhitespace(itemStorageCapacity);
+            String itemStorageCapacity = StringUtils.deleteWhitespace(itemsSpecificBlock.getStorageCapacityText());
             softAssertItemStorageCapacity.assertEquals(itemStorageCapacity.toLowerCase(Locale.ROOT),
                     storageCapacityBlock.getLabelText().toLowerCase(Locale.ROOT),
                     String.format("Product storage capacity is not %s.", storageCapacityBlock.getLabelText()));
 
-            driver.close();
-            driver.switchTo().window(oldTab);
+            tabService.closeNewTabAndSwitchBack();
         });
         softAssertItemStorageCapacity.assertAll();
     }

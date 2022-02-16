@@ -2,69 +2,61 @@ package com.solvd.task1;
 
 import com.solvd.task1.page.HomePage;
 import com.solvd.task1.page.SearchedResultPage;
+import com.solvd.task1.service.WebDriverPool;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
 public class EbayTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EbayTest.class);
-    private WebDriver driver;
+    private final String localhost = "http://localhost:4444/wd/hub";
 
     @BeforeMethod
-    public void setup() {
-        System.setProperty("webdriver.chrome.driver", "/Users/apetrov/Documents/SeleniumServer/chromedriver");
-        this.driver = new ChromeDriver();
+    public void setup() throws MalformedURLException {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        desiredCapabilities.setBrowserName("chrome");
+        desiredCapabilities.setPlatform(Platform.MAC);
+        WebDriverPool.add(new RemoteWebDriver(new URL(localhost), desiredCapabilities));
     }
 
     @Test
     public void checkSearchTest() {
-        HomePage homePage = new HomePage(this.driver);
+        WebDriver driver = WebDriverPool.get();
+        HomePage homePage = new HomePage(driver);
         homePage.writeInSearchLine("samsung");
         homePage.clickSearchButton();
 
-        SearchedResultPage searchedResultPage = new SearchedResultPage(this.driver);
-        List<WebElement> searchedItems = searchedResultPage.getSearchedItemsTitles();
-        Assert.assertFalse(searchedItems.isEmpty(), "There are no searched items in list.");
+        SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
+        Assert.assertFalse(searchedResultPage.getItemsTitles().isEmpty(), "There are no searched items in list.");
 
         SoftAssert softAssert = new SoftAssert();
-        searchedItems.forEach(searchedItem -> {
-            softAssert.assertTrue(searchedItem.getText().toLowerCase(Locale.ROOT).contains("samsung"),
+        searchedResultPage.getItemsNames().forEach(itemName -> {
+            softAssert.assertTrue(itemName.toLowerCase(Locale.ROOT).contains("samsung"),
                     "Product title doesn't contain brand name \"Samsung\"");
-            LOGGER.info(searchedItem.getText());
+            LOGGER.info(itemName);
         });
         softAssert.assertAll();
     }
 
-    /**
-     * I met captcha, because of this i couldn't do this test.
-     */
-    /*@Test
-    public void checkSignInTest() {
-        HomePage homePage = new HomePage(this.driver);
-        AbstractPage.click(driver, homePage.getSignInLink());
-
-        SignInPage signInPage = new SignInPage(this.driver);
-        AbstractPage.sendKeys(driver, signInPage.getUserInput(), "apetrov@solvd.com");
-        AbstractPage.click(driver, signInPage.getContinueButton());
-
-        WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
-        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.ByCssSelector.cssSelector("#errormsg")));
-        Assert.assertEquals(errorMessage.getText(), "Oops, that's not a match.", "Error message at Sign In page not equals.");
-    }*/
-
     @AfterMethod
     public void end() {
-        this.driver.close();
-        this.driver.quit();
+        WebDriver driver = WebDriverPool.get();
+        driver.close();
+        driver.quit();
     }
 
 }

@@ -27,13 +27,14 @@ import java.time.LocalDateTime;
 public class ChromeTest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ChromeTest.class);
+    private final String localhost = "http://localhost:4444/wd/hub";
 
     @BeforeMethod
     public synchronized void setup() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName("chrome");
         desiredCapabilities.setPlatform(Platform.MAC);
-        WebDriverPool.add(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities));
+        WebDriverPool.add(new RemoteWebDriver(new URL(localhost), desiredCapabilities));
     }
 
     @Test

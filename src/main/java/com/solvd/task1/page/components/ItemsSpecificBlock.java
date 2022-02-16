@@ -24,6 +24,10 @@ public class ItemsSpecificBlock {
                 By.xpath("div.ux-labels-values.col-12.ux-labels-values--storageCapacity div.ux-labels-values__values span"));
     }
 
+    public String getStorageCapacityText() {
+        return this.storageCapacity.getText();
+    }
+
     public WebElement getStorageCapacity() {
         return storageCapacity;
     }
