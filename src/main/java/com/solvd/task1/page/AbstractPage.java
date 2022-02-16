@@ -30,13 +30,13 @@ public abstract class AbstractPage {
         this.driver.get(this.pageURL);
     }
 
-    public static void click(WebElement element) {
+    protected void click(WebElement element) {
         String elementName = element.getAccessibleName();
         new WebDriverWait(WebDriverPool.get(), TIMEOUT).until(ExpectedConditions.elementToBeClickable(element)).click();
         LOGGER.info("\"" + elementName + "\"" + " was clicked.");
     }
 
-    public static void sendKeys(WebElement element, String string) {
+    protected void sendKeys(WebElement element, String string) {
         String elementName = element.getAccessibleName();
         new WebDriverWait(WebDriverPool.get(), TIMEOUT).until(ExpectedConditions.visibilityOf(element)).sendKeys(string);
         LOGGER.info("\"" + elementName + "\"" + " was wrote in to a " + "\"" + element.getAccessibleName() + "\".");

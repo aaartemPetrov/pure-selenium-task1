@@ -20,35 +20,11 @@ public class HomePage extends AbstractPage {
     }
 
     public void writeInSearchLine(String string) {
-        this.searchInput.sendKeys(string);
+        sendKeys(this.searchInput, string);
     }
 
     public void clickSearchButton() {
-        this.searchButton.click();
-    }
-
-    public WebElement getSignInLink() {
-        return this.signInLink;
-    }
-
-    public void setSignInLink(WebElement signInLink) {
-        this.signInLink = signInLink;
-    }
-
-    public WebElement getSearchInput() {
-        return this.searchInput;
-    }
-
-    public void setSearchInput(WebElement searchInput) {
-        this.searchInput = searchInput;
-    }
-
-    public WebElement getSearchButton() {
-        return this.searchButton;
-    }
-
-    public void setSearchButton(WebElement searchButton) {
-        this.searchButton = searchButton;
+        click(this.searchButton);
     }
 
 }

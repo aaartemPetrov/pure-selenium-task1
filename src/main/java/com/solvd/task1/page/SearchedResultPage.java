@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class SearchedResultPage extends AbstractPage {
@@ -19,6 +20,14 @@ public class SearchedResultPage extends AbstractPage {
     @FindBy(css = "#s0-14-11-6-3-query_answer1-answer-2-1-0-list li:nth-child(2)")
     private WebElement fromToPriceLink;
 
+    public void clickOnProductByName(String productName) {
+        this.itemsLinks.forEach(itemLink -> {
+            System.out.println(itemLink.getText());
+            if(productName.toLowerCase(Locale.ROOT).equals(itemLink.getText().toLowerCase(Locale.ROOT))) {
+                this.click(itemLink);
+            }
+        });
+    }
 
     public SearchedResultPage(WebDriver driver) {
         super(driver);
@@ -47,10 +56,6 @@ public class SearchedResultPage extends AbstractPage {
 
     public int itemPricesCount() {
         return this.itemsTitles.size();
-    }
-
-    public List<WebElement> getItemsLinks() {
-        return itemsLinks;
     }
 
 }

@@ -2,41 +2,23 @@ package com.solvd.task1;
 
 import com.solvd.task1.page.*;
 import com.solvd.task1.page.components.*;
-import com.solvd.task1.service.Configuration;
 import com.solvd.task1.service.TabService;
 import com.solvd.task1.service.WebDriverPool;
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
-public class EbayTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EbayTest.class);
-    private final String localhost = Configuration.getProperty("selenium_url");
-
-    @BeforeMethod
-    public void setup() throws MalformedURLException {
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        desiredCapabilities.setBrowserName(Configuration.getProperty("browser"));
-        WebDriverPool.add(new RemoteWebDriver(new URL(localhost), desiredCapabilities));
-    }
+public class EbayTest extends AbstractTest {
 
     @Test
     public void checkSearchTooltipTest() {
         WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
-        AbstractPage.sendKeys(homePage.getSearchInput(), "a");
+        homePage.writeInSearchLine("a");
 
         SearchTooltip searchTooltip = new SearchTooltip(driver);
         Assert.assertNotEquals(searchTooltip.tooltipsCount(), 0, "Tooltip popup is empty or don't exist.");
@@ -52,8 +34,8 @@ public class EbayTest {
         WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
-        AbstractPage.sendKeys(homePage.getSearchInput(), brandName);
-        AbstractPage.click(homePage.getSearchButton());
+        homePage.writeInSearchLine(brandName);
+        homePage.clickSearchButton();
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         Assert.assertNotEquals(searchedResultPage.itemTitlesCount(), 0, "There are no searched items in list.");
@@ -71,11 +53,11 @@ public class EbayTest {
         WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
-        AbstractPage.sendKeys(homePage.getSearchInput(), "samsung");
-        AbstractPage.click(homePage.getSearchButton());
+        homePage.writeInSearchLine("samsung");
+        homePage.clickSearchButton();
 
         UnderPriceLink underPriceLink = new UnderPriceLink(driver);
-        AbstractPage.click(underPriceLink.getLink());
+        underPriceLink.click();
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         Assert.assertNotEquals(searchedResultPage.itemTitlesCount(), 0, "There are no searched items in list.");
@@ -101,11 +83,11 @@ public class EbayTest {
         WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
-        AbstractPage.sendKeys(homePage.getSearchInput(), "samsung");
-        AbstractPage.click(homePage.getSearchButton());
+        homePage.writeInSearchLine("samsung");
+        homePage.clickSearchButton();
 
         FromToPriceLink fromToPriceLink = new FromToPriceLink(driver);
-        AbstractPage.click(fromToPriceLink.getLink());
+        fromToPriceLink.click();
 
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         Assert.assertNotEquals(searchedResultPage.itemTitlesCount(), 0, "There are no searched items in list.");
@@ -137,8 +119,8 @@ public class EbayTest {
         WebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
-        AbstractPage.sendKeys(homePage.getSearchInput(), "samsung");
-        AbstractPage.click(homePage.getSearchButton());
+        homePage.writeInSearchLine("samsung");
+        homePage.clickSearchButton();
 
         StorageCapacityBlock storageCapacityBlock = new StorageCapacityBlock(driver);
         storageCapacityBlock.clickCheckbox();
@@ -147,21 +129,15 @@ public class EbayTest {
         Assert.assertNotEquals(searchedResultPage.itemTitlesCount(), 0, "There are no searched items in list.");
 
         SoftAssert softAssertItemStorageCapacity = new SoftAssert();
-        searchedResultPage.getItemsLinks().forEach(searchedItemLink -> {
+
+        searchedResultPage.getItemsNames().forEach(itemName -> {
             TabService tabService = new TabService(driver);
-            AbstractPage.click(searchedItemLink);
+            searchedResultPage.clickOnProductByName(itemName);
             tabService.switchToNewTab();
             ///logic
             tabService.closeNewTabAndSwitchBack();
         });
         softAssertItemStorageCapacity.assertAll();
-    }
-
-    @AfterMethod
-    public void end() {
-        WebDriver driver = WebDriverPool.get();
-        driver.close();
-        driver.quit();
     }
 
 }
