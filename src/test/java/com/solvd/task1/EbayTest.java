@@ -88,7 +88,6 @@ public class EbayTest extends AbstractTest {
 
         FromToPriceLink fromToPriceLink = new FromToPriceLink(driver);
         fromToPriceLink.click();
-
         SearchedResultPage searchedResultPage = new SearchedResultPage(driver);
         Assert.assertNotEquals(searchedResultPage.itemTitlesCount(), 0, "There are no searched items in list.");
         Assert.assertNotEquals(searchedResultPage.itemPricesCount(), 0, "There are no searched items prices in list.");
