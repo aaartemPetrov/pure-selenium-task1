@@ -71,9 +71,8 @@ public class EbayTest extends AbstractTest {
         softAssertTitle.assertAll();
 
         SoftAssert softAssertPrice = new SoftAssert();
-        searchedResultPage.getIntItemPrices().forEach(itemPrices -> {
-            int actualItemPrice = Integer.parseInt(itemPrices[0]);
-            softAssertPrice.assertTrue(actualItemPrice <= underPriceLink.getPrice(), String.format("Price %d is bigger then %d", actualItemPrice, underPriceLink.getPrice()));
+        searchedResultPage.getMinPrices().forEach(actualItemPrice -> {
+            softAssertPrice.assertTrue(actualItemPrice <= underPriceLink.getPrice(), String.format("Price %d is bigger then %d.", actualItemPrice, underPriceLink.getPrice()));
         });
         softAssertPrice.assertAll();
     }
@@ -94,23 +93,26 @@ public class EbayTest extends AbstractTest {
 
         SoftAssert softAssertTitle = new SoftAssert();
         searchedResultPage.getItemsNames().forEach(itemName -> {
-            softAssertTitle.assertTrue(itemName.toLowerCase(Locale.ROOT).contains("samsung"), String.format("Product title doesn't contain brand name \"%s\"", "samsung"));
+            softAssertTitle.assertTrue(itemName.toLowerCase(Locale.ROOT).contains("samsung"),
+                    String.format("Product title doesn't contain brand name \"%s\".", "samsung"));
             LOGGER.info(itemName);
         });
         softAssertTitle.assertAll();
 
-        SoftAssert softAssertPrice = new SoftAssert();
-        searchedResultPage.getIntItemPrices().forEach(itemPrices -> {
-            if (itemPrices.length == 1) {
-                int actualPrice = Integer.parseInt(itemPrices[0]);
-                softAssertPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualPrice && actualPrice <= fromToPriceLink.getToPrice(), String.format("Price %d is not in range from %d to %d", actualPrice, fromToPriceLink.getFromPrice(), fromToPriceLink.getToPrice()));
-            } else {
-                int actualMinPrice = Integer.parseInt(itemPrices[0]);
-                int actualMaxPrice = Integer.parseInt(itemPrices[1]);
-                softAssertPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualMinPrice && actualMaxPrice <= fromToPriceLink.getToPrice(), String.format("Price %d-%d is not in range from %d to %d", actualMinPrice, actualMaxPrice, fromToPriceLink.getFromPrice(), fromToPriceLink.getToPrice()));
-            }
+        SoftAssert softAssertMinPrice = new SoftAssert();
+        searchedResultPage.getMinPrices().forEach(actualItemPrice -> {
+            softAssertMinPrice.assertTrue(fromToPriceLink.getFromPrice() <= actualItemPrice,
+                    String.format("Price %d is lower then %d.", actualItemPrice, fromToPriceLink.getFromPrice()));
         });
-        softAssertPrice.assertAll();
+        softAssertMinPrice.assertAll();
+
+        SoftAssert softAssertMaxPrice = new SoftAssert();
+        searchedResultPage.getMaxPrices().forEach(actualItemPrice -> {
+            softAssertMaxPrice.assertTrue(actualItemPrice <= fromToPriceLink.getToPrice(),
+                    String.format("Price %d is bigger then %d.", actualItemPrice, fromToPriceLink.getFromPrice()));
+        });
+        softAssertMaxPrice.assertAll();
+
     }
 
     @Test
@@ -128,7 +130,6 @@ public class EbayTest extends AbstractTest {
         Assert.assertNotEquals(searchedResultPage.itemTitlesCount(), 0, "There are no searched items in list.");
 
         SoftAssert softAssertItemStorageCapacity = new SoftAssert();
-
         searchedResultPage.getItemsNames().forEach(itemName -> {
             TabService tabService = new TabService(driver);
             searchedResultPage.clickOnProductByName(itemName);

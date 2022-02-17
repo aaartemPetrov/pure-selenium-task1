@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -40,12 +41,31 @@ public class SearchedResultPage extends AbstractPage {
                 .collect(Collectors.toList());
     }
 
-    public List<String[]> getIntItemPrices() {
+    public List<Integer> getMinPrices() {
+        return this.getItemPrices().stream()
+                .map(itemPrices -> itemPrices.get(0))
+                .collect(Collectors.toList());
+    }
+
+    public List<Integer> getMaxPrices() {
+        return this.getItemPrices().stream()
+                .map(itemPrices -> {
+                    if(itemPrices.size() == 1) {
+                        return itemPrices.get(0);
+                    } else {
+                        return itemPrices.get(1);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<List<Integer>> getItemPrices() {
         return this.itemsPrices.stream()
                 .map(itemPrice -> {
                     String itemPriceString = itemPrice.getText();
                     itemPriceString = StringUtils.replaceChars(itemPriceString, ",", ".");
-                    return StringUtils.substringsBetween(itemPriceString, "$", ".");
+                    return Arrays.stream(StringUtils.substringsBetween(itemPriceString, "$", "."))
+                            .map(price -> Integer.parseInt(price)).collect(Collectors.toList());
                 })
                 .collect(Collectors.toList());
     }

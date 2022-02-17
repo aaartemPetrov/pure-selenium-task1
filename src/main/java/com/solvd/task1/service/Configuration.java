@@ -21,6 +21,7 @@ public abstract class Configuration {
             for(Object key : property.keySet()) {
                 configuration.put((String)key, property.getProperty((String)key));
             }
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
