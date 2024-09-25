@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,7 +18,7 @@ public class UnderPriceLink extends AbstractPage {
     private WebElement link;
     private final int price;
 
-    public UnderPriceLink(WebDriver driver) {
+    public UnderPriceLink(RemoteWebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
 

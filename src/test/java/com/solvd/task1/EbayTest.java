@@ -1,21 +1,48 @@
 package com.solvd.task1;
 
-import com.solvd.task1.page.*;
-import com.solvd.task1.page.components.*;
+import com.solvd.task1.page.HomePage;
+import com.solvd.task1.page.SearchedResultPage;
+import com.solvd.task1.page.components.FromToPriceLink;
+import com.solvd.task1.page.components.SearchTooltip;
+import com.solvd.task1.page.components.StorageCapacityBlock;
+import com.solvd.task1.page.components.UnderPriceLink;
 import com.solvd.task1.service.TabService;
 import com.solvd.task1.service.WebDriverPool;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
-import java.util.*;
+
+import java.lang.invoke.MethodHandles;
+import java.util.Locale;
 
 public class EbayTest extends AbstractTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+//    @Test
+//    public void testTest() throws MalformedURLException {
+//        DesiredCapabilities ds = new DesiredCapabilities();
+//        ds.setBrowserName("firefox");
+//        ds.setCapability("version", "98.0");
+//        ds.setCapability("enableVNC", true);
+//        ds.setCapability("enableVideo", true);
+//        ds.setCapability("enableLog", true);
+//        RemoteWebDriver driver = new RemoteWebDriver(new URL("http://login:password@localhost:4444/wd/hub"), ds);
+//        driver.get("https://www.google.com/");
+//        driver.findElement(By.cssSelector("input[name=\"q\"]")).sendKeys("Hello, Google, i know for sure that you have consciousness :)");
+//        driver.findElement(By.cssSelector("input[name=\"q\"]")).sendKeys(Keys.ENTER);
+//        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+//        driver.quit();
+//    }
+
     @Test
     public void checkSearchTooltipTest() {
-        WebDriver driver = WebDriverPool.get();
+        RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
         homePage.writeInSearchLine("a");
@@ -31,7 +58,7 @@ public class EbayTest extends AbstractTest {
 
     @Test(dataProvider = "brandNamesForSearch")
     public void checkSearchTest(String brandName) {
-        WebDriver driver = WebDriverPool.get();
+        RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
         homePage.writeInSearchLine(brandName);
@@ -50,7 +77,7 @@ public class EbayTest extends AbstractTest {
 
     @Test
     public void checkUnderPriceFilterTest() {
-        WebDriver driver = WebDriverPool.get();
+        RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
         homePage.writeInSearchLine("samsung");
@@ -79,7 +106,7 @@ public class EbayTest extends AbstractTest {
 
     @Test
     public void checkFromToPriceFilterTest() {
-        WebDriver driver = WebDriverPool.get();
+        RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
         homePage.writeInSearchLine("samsung");
@@ -117,7 +144,7 @@ public class EbayTest extends AbstractTest {
 
     @Test
     public void checkStorageCapacityFilter() {
-        WebDriver driver = WebDriverPool.get();
+        RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
         homePage.open();
         homePage.writeInSearchLine("samsung");

@@ -9,10 +9,10 @@
     <version>1.0</version>
 
     <properties>
-        <seleniumVersion>4.1.2</seleniumVersion>
-        <log4jVerison>2.17.1</log4jVerison>
-        <slf4jVersion>1.7.35</slf4jVersion>
-        <testNgVersion>7.5</testNgVersion>
+        <seleniumVersion>4.25.0</seleniumVersion>
+        <log4jVerison>2.17.2</log4jVerison>
+        <slf4jVersion>1.7.36</slf4jVersion>
+        <testNgVersion>7.7.1</testNgVersion>
         <logbackVersion>1.2.10</logbackVersion>
         <apacheStringUtilsVersion>3.12.0</apacheStringUtilsVersion>
         <apacheFileUtilsVersion>2.6</apacheFileUtilsVersion>
@@ -21,6 +21,13 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.zebrunner</groupId>
+            <artifactId>agent-testng</artifactId>
+            <version>1.9.7</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
@@ -35,10 +42,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4jVerison}</version>
-            <scope>test</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4jVersion}</version>
         </dependency>
 
         <dependency>
@@ -54,6 +60,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4jVerison}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testNgVersion}</version>
@@ -64,6 +76,12 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${seleniumVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.8.0</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

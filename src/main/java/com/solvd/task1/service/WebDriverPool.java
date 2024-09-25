@@ -1,24 +1,23 @@
 package com.solvd.task1.service;
-
-import org.openqa.selenium.WebDriver;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class WebDriverPool {
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-    private static final Map<Long, WebDriver> threadIdDrivers = new HashMap<>();
+public abstract class WebDriverPool {
 
-    public static WebDriver get() {
+    private static final Map<Long, RemoteWebDriver> threadIdDrivers = new HashMap<>();
+
+    public static RemoteWebDriver get() {
         return threadIdDrivers.get(Thread.currentThread().getId());
     }
 
-    public static void add(WebDriver driver) {
+    public static void add(RemoteWebDriver driver) {
         threadIdDrivers.put(Thread.currentThread().getId(), driver);
     }
 
-    public static Set<Map.Entry<Long, WebDriver>> entrySet() {
+    public static Set<Map.Entry<Long, RemoteWebDriver>> entrySet() {
         return threadIdDrivers.entrySet();
     }
 

@@ -3,6 +3,7 @@ package com.solvd.task1.page;
 import com.solvd.task1.service.Configuration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 
 public class HomePage extends AbstractPage {
@@ -14,7 +15,7 @@ public class HomePage extends AbstractPage {
     @FindBy(css = "#gh-eb-u a[href*=sign]")
     private WebElement signInLink;
 
-    public HomePage(WebDriver driver) {
+    public HomePage(RemoteWebDriver driver) {
         super(driver);
         setPageURL(Configuration.getProperty("url"));
     }

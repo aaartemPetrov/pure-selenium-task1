@@ -17,9 +17,9 @@ public abstract class Configuration {
         try {
             InputStream inputStream = Files.newInputStream(Paths.get("./src/main/resources/" + configName));
             Properties property = new Properties();
-             property.load(inputStream);
-            for(Object key : property.keySet()) {
-                configuration.put((String)key, property.getProperty((String)key));
+            property.load(inputStream);
+            for (Object key : property.keySet()) {
+                configuration.put((String) key, property.getProperty((String) key));
             }
             inputStream.close();
         } catch (IOException e) {
@@ -28,8 +28,8 @@ public abstract class Configuration {
         return configuration;
     }
 
-    public static String getProperty(String keyProperty) {
-        return configuration.get(keyProperty);
+    public static String getProperty(String propertyKey) {
+        return configuration.get(propertyKey);
     }
 
 }

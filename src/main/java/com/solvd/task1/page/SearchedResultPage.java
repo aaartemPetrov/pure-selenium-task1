@@ -3,6 +3,7 @@ package com.solvd.task1.page;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class SearchedResultPage extends AbstractPage {
         });
     }
 
-    public SearchedResultPage(WebDriver driver) {
+    public SearchedResultPage(RemoteWebDriver driver) {
         super(driver);
         setPageURL(driver.getCurrentUrl());
     }

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -13,11 +14,11 @@ import java.time.Duration;
 
 public class StorageCapacityBlock {
 
-    private final WebDriver driver;
+    private final RemoteWebDriver driver;
     private WebElement checkbox;
     private String labelText;
 
-    public StorageCapacityBlock(WebDriver driver) {
+    public StorageCapacityBlock(RemoteWebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(this.driver, this);
 

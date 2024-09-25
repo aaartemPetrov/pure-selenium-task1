@@ -2,6 +2,11 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="ebay">
+    <listeners>
+        <listener class-name="com.solvd.task1.ScreenshotListener" />
+    </listeners>
+
+    <parameter name="reporting.run.display-name" value="Ebay ICEDEM Test"/>
 
     <test name="ebayAbstractTest" parallel="methods" thread-count="5">
         <classes>

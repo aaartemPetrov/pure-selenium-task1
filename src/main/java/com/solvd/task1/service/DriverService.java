@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class DriverService {
+public abstract class DriverService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DriverService.class);
     private static final String localhost = Configuration.getProperty("selenium_url");
@@ -25,8 +25,7 @@ public class DriverService {
     }
 
     public static void shutDown() {
-        WebDriver driver = WebDriverPool.get();
-        driver.close();
+        RemoteWebDriver driver = WebDriverPool.get();
         driver.quit();
     }
 
