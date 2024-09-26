@@ -23,7 +23,7 @@ public abstract class DriverService {
         try {
             WebDriverPool.add(new RemoteWebDriver(new URL(seleniumURL), desiredCapabilities));
         } catch (MalformedURLException e) {
-            LOGGER.error("MalformedURLException in EbayTest.setup(). Error message: " + e.getMessage() + " url: " + seleniumURL );
+            LOGGER.error("MalformedURLException in EbayTest.setup(). Error message: " + e.getMessage() + " url: " + localhost );
         }
     }
 
