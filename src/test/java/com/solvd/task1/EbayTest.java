@@ -8,6 +8,8 @@ import com.solvd.task1.page.components.StorageCapacityBlock;
 import com.solvd.task1.page.components.UnderPriceLink;
 import com.solvd.task1.service.TabService;
 import com.solvd.task1.service.WebDriverPool;
+import com.zebrunner.agent.core.annotation.Maintainer;
+
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,7 @@ public class EbayTest extends AbstractTest {
 //    }
 
     @Test
+    @Maintainer("apetrov")
     public void checkSearchTooltipTest() {
         RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
@@ -57,6 +60,7 @@ public class EbayTest extends AbstractTest {
     }
 
     @Test(dataProvider = "brandNamesForSearch")
+    @Maintainer("apetrov")
     public void checkSearchTest(String brandName) {
         RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
@@ -76,6 +80,7 @@ public class EbayTest extends AbstractTest {
     }
 
     @Test
+    @Maintainer("apetrov")
     public void checkUnderPriceFilterTest() {
         RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
@@ -105,24 +110,42 @@ public class EbayTest extends AbstractTest {
     }
 
     @Test
+    @Maintainer("apetrov")
     public void passedTest1() {
         LOGGER.info("test1");
+        RemoteWebDriver driver = WebDriverPool.get();
+        HomePage homePage = new HomePage(driver);
+        homePage.open();
     }
 
     @Test
+    @Maintainer("apetrov")
     public void passedTest2() {
         LOGGER.info("test2");
+        RemoteWebDriver driver = WebDriverPool.get();
+        HomePage homePage = new HomePage(driver);
+        homePage.open();
     }
 
     @Test
+    @Maintainer("apetrov")
     public void passedTest3() {
         LOGGER.info("test3");
+        RemoteWebDriver driver = WebDriverPool.get();
+        HomePage homePage = new HomePage(driver);
+        homePage.open();
     }
     @Test
+    @Maintainer("apetrov")
     public void passedTest4() {
         LOGGER.info("test4");
+        RemoteWebDriver driver = WebDriverPool.get();
+        HomePage homePage = new HomePage(driver);
+        homePage.open();
     }
+
     @Test
+    @Maintainer("apetrov")
     public void checkFromToPriceFilterTest() {
         RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
@@ -161,6 +184,7 @@ public class EbayTest extends AbstractTest {
     }
 
     @Test
+    @Maintainer("apetrov")
     public void checkStorageCapacityFilter() {
         RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
