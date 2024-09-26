@@ -105,6 +105,24 @@ public class EbayTest extends AbstractTest {
     }
 
     @Test
+    public void passedTest1() {
+        LOGGER.info("test1");
+    }
+
+    @Test
+    public void passedTest2() {
+        LOGGER.info("test2");
+    }
+
+    @Test
+    public void passedTest3() {
+        LOGGER.info("test3");
+    }
+    @Test
+    public void passedTest4() {
+        LOGGER.info("test4");
+    }
+    @Test
     public void checkFromToPriceFilterTest() {
         RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
