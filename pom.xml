@@ -10,13 +10,14 @@
 
     <properties>
         <seleniumVersion>4.13.0</seleniumVersion>
+        <testNgVersion>7.7.1</testNgVersion>
+        <suite></suite>
+
         <log4jVerison>2.17.2</log4jVerison>
         <slf4jVersion>1.7.36</slf4jVersion>
-        <testNgVersion>7.7.1</testNgVersion>
         <logbackVersion>1.2.10</logbackVersion>
         <apacheStringUtilsVersion>3.12.0</apacheStringUtilsVersion>
         <apacheFileUtilsVersion>2.6</apacheFileUtilsVersion>
-        <suite></suite>
     </properties>
 
     <dependencies>
@@ -103,7 +104,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M4</version>
                 <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
                     <suiteXmlFiles>
                         <suiteXmlFile>${project.build.directory}/test-classes/${suite}.xml</suiteXmlFile>
                     </suiteXmlFiles>

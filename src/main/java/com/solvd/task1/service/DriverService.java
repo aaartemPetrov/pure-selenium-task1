@@ -16,7 +16,7 @@ public abstract class DriverService {
 
     public static void setUp() {
         String seleniumURL = localhost;
-        if("".equals(seleniumURL)) seleniumURL = System.getenv("selenium_url");
+        if(System.getenv("selenium_url")!=null) seleniumURL = System.getenv("selenium_url");
 
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName(Configuration.getProperty("browser"));
