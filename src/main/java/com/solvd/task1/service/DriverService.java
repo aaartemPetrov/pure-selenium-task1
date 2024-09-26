@@ -15,10 +15,13 @@ public abstract class DriverService {
     private static final String localhost = Configuration.getProperty("selenium_url");
 
     public static void setUp() {
+        String seleniumURL = localhost;
+        if("".equals(Configuration.getProperty("selenium_url"))) seleniumURL = System.getProperty("selenium_url");
+
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName(Configuration.getProperty("browser"));
         try {
-            WebDriverPool.add(new RemoteWebDriver(new URL(localhost), desiredCapabilities));
+            WebDriverPool.add(new RemoteWebDriver(new URL(seleniumURL), desiredCapabilities));
         } catch (MalformedURLException e) {
             LOGGER.error("MalformedURLException in EbayTest.setup(). Error message: " + e.getMessage());
         }
