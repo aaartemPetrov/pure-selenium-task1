@@ -20,7 +20,6 @@ public abstract class DriverService {
 
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setBrowserName(Configuration.getProperty("browser"));
-        desiredCapabilities.setCapability("enableVideo", false);
         try {
             WebDriverPool.add(new RemoteWebDriver(new URL(seleniumURL), desiredCapabilities));
         } catch (MalformedURLException e) {
