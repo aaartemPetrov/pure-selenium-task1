@@ -1,6 +1,7 @@
 package com.solvd.task1;
 
 import com.solvd.task1.service.DriverService;
+import com.zebrunner.agent.core.registrar.CurrentTestRun;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,9 @@ public abstract class AbstractTest {
 
     @BeforeSuite
     public void preSetup() {
-
+        CurrentTestRun.setBuild("v.1.2.3.4.5");
+        CurrentTestRun.setLocale("enGB");
+        CurrentTestRun.setPlatform("WEB");
     }
 
     @BeforeMethod
