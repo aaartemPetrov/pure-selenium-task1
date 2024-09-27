@@ -9,6 +9,7 @@ import com.solvd.task1.page.components.UnderPriceLink;
 import com.solvd.task1.service.TabService;
 import com.solvd.task1.service.WebDriverPool;
 import com.zebrunner.agent.core.annotation.Maintainer;
+import com.zebrunner.agent.core.annotation.TestCaseKey;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class EbayTest extends AbstractTest {
 
     @Test
     @Maintainer("apetrov")
+    @TestCaseKey("ICEDEM-1")
     public void checkSearchTooltipTest() {
         RemoteWebDriver driver = WebDriverPool.get();
         HomePage homePage = new HomePage(driver);
