@@ -12,6 +12,10 @@
         <classes>
             <class name="com.solvd.task1.EbayTest">
                 <methods>
+                    <include name="passedTest1"/>
+                    <include name="passedTest2"/>
+                    <include name="passedTest3"/>
+                    <include name="passedTest4"/>
                     <include name="checkSearchTest"/>
                     <include name="checkSearchTooltipTest"/>
                     <include name="checkUnderPriceFilterTest"/>
